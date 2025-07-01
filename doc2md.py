@@ -61,10 +61,42 @@ for root, _, files in os.walk(source_folder):
             continue
         
         # 2️⃣ 处理 .docx 文件
+        # if filename.endswith('.docx'):
+        #     try:
+        #         subprocess.run(['markitdown', input_file, '-o', output_file], check=True)
+        #         print(f"✅ Converted DOCX to MD: {input_file} → {output_file}")
+        #     except subprocess.CalledProcessError as e:
+        #         print(f"❌ Error converting DOCX: {e}")
+        #     continue
+
         if filename.endswith('.docx'):
+            html_temp = os.path.join(target_folder, f"{os.path.splitext(filename)[0]}.html")
             try:
-                subprocess.run(['markitdown', input_file, '-o', output_file], check=True)
-                print(f"✅ Converted DOCX to MD: {input_file} → {output_file}")
+                # Xuất HTML tự chứa
+                subprocess.run([
+                    'pandoc',
+                    input_file,
+                    '-t',
+                    'html',
+                    '-o',
+                    html_temp,
+                    '--self-contained'
+                ], check=True)
+                
+                # Sau đó convert HTML sang Markdown
+                subprocess.run([
+                    'pandoc',
+                    html_temp,
+                    '-t',
+                    'markdown',
+                    '-o',
+                    output_file
+                ], check=True)
+                
+                # Xóa file tạm HTML nếu muốn
+                os.remove(html_temp)
+                
+                print(f"✅ Converted DOCX to Markdown with embedded base64 PNG images: {input_file} → {output_file}")
             except subprocess.CalledProcessError as e:
                 print(f"❌ Error converting DOCX: {e}")
             continue
