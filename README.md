@@ -17,13 +17,14 @@
 
 - Python 3.x  
 
-## 依赖安装
-
-运行以下命令安装所需库：
+## Cài đặt thư viện
 
 ```bash
 pip install pdfplumber python-docx pywin32 markitdown
 ```
+
+## Cài đặt bổ sung
+```https://github.com/jgm/pandoc/releases```
 
 ## 使用方法
 
